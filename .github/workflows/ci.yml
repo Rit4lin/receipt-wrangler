@@ -2,6 +2,7 @@
 name: CI - Build and Test
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -44,6 +45,7 @@ jobs:
               - 'api/**'
               - 'desktop/**'
               - 'docker/**'
+              - '.github/workflows/ci.yml'
 
   test-api:
     needs: detect-changes
@@ -172,7 +174,7 @@ jobs:
     needs: [detect-changes, test-api, test-desktop]
     if: |
       always() &&
-      needs.detect-changes.outputs.docker == 'true' &&
+      (github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.docker == 'true') &&
       !contains(needs.*.result, 'failure') &&
       !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-24.04-arm
@@ -209,7 +211,7 @@ jobs:
     needs: [detect-changes, test-api, test-desktop]
     if: |
       always() &&
-      needs.detect-changes.outputs.docker == 'true' &&
+      (github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.docker == 'true') &&
       !contains(needs.*.result, 'failure') &&
       !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-latest
