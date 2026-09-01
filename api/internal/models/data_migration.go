@@ -11,6 +11,6 @@ import "time"
 // by GORM's default scope and cause the migration to re-run.
 type DataMigration struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
-	Name      string    `gorm:"uniqueIndex;not null" json:"name"`
+	Name      string    `gorm:"not null;size:128;uniqueIndex" json:"name"`
 	AppliedAt time.Time `gorm:"not null" json:"appliedAt"`
 }

@@ -8,7 +8,7 @@ import (
 
 type Category struct {
 	BaseModel
-	Name        string `gorm:"not null; uniqueIndex" json:"name"`
+	Name        string `gorm:"not null;size:255;uniqueIndex" json:"name"`
 	Description string `json:"description"`
 }
 
