@@ -118,7 +118,11 @@ func openWithRetry(dialector gorm.Dialector, maxAttempts int) (*gorm.DB, error) 
 }
 
 func MakeMigrations() error {
-	err := db.AutoMigrate(
+	return db.AutoMigrate(migrationModels()...)
+}
+
+func migrationModels() []interface{} {
+	return []interface{}{
 		&models.RefreshToken{},
 		&models.AppRole{},
 		&models.AppRolePermission{},
@@ -165,9 +169,7 @@ func MakeMigrations() error {
 		&models.DataMigration{},
 		&models.OAuthClient{},
 		&models.OAuthAuthorizationCode{},
-	)
-
-	return err
+	}
 }
 
 func GetDB() *gorm.DB {
