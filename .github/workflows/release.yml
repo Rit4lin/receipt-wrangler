@@ -12,6 +12,8 @@ jobs:
   test-api:
     runs-on: ubuntu-latest
     container: golang:1.25-trixie
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Mark workspace as safe directory
@@ -26,9 +28,10 @@ jobs:
         run: go test -coverprofile=coverage.out -covermode=atomic -v ./...
         working-directory: ./api
       - name: Upload Coverage Report to Codecov
+        if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ env.CODECOV_TOKEN }}
           files: ./api/coverage.out
           flags: api
           fail_ci_if_error: true
@@ -42,6 +45,7 @@ jobs:
   test-desktop:
     runs-on: ubuntu-latest
     env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       GH_PACKAGE_READ_TOKEN_DESKTOP: ${{ secrets.GH_PACKAGE_READ_TOKEN_DESKTOP }}
     steps:
       - uses: actions/checkout@v4
@@ -62,9 +66,10 @@ jobs:
           output: both
           badge: true
       - name: Upload coverage to Codecov
+        if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ env.CODECOV_TOKEN }}
           files: ./desktop/coverage/receipt-wrangler-desktop/cobertura-coverage.xml
           flags: desktop
           fail_ci_if_error: true
